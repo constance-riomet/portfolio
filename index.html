@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<!-- Mobile first : indispensable pour que la page s’adapte aux téléphones -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Constance Riomet – Portfolio 2026</title>
+<meta name="description" content="Portfolio de Constance Riomet, étudiante en DNMADe Numérique : design interactif, communication visuelle, édition, illustration.">
+<!-- Prévient le CSS que JavaScript fonctionne (sans JS, tout reste visible) -->
+<script>document.documentElement.classList.add("js")</script>
+<!-- Work Sans : chargée depuis Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300..700;1,300..500&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================
+   1. COULEURS, POLICES, TAILLES  ✏️ le plus simple à modifier
+   ===================================================== */
+/* Area n’est pas sur Google Fonts : place ton fichier dans un dossier "fonts"
+   et corrige le nom ci-dessous. Sans fichier, Work Sans (gras) prend le relais. */
+@font-face{font-family:"Area";src:url("fonts/Area.woff2") format("woff2");font-weight:100 900;font-display:swap}
+
+:root{
+  --rose:#b5134b;          /* couleur principale (le rose-rouge de ton book) */
+  --creme:#fbf5f1;         /* fond clair */
+  --encre:#2b0b17;         /* texte */
+  --titre:"Area","Work Sans",system-ui,sans-serif;   /* titres */
+  --texte:"Work Sans",system-ui,sans-serif;          /* textes */
+  --marge:clamp(1.25rem,5vw,4rem);                   /* marges latérales */
+  --ease:cubic-bezier(.2,.7,.2,1);                   /* douceur des animations */
+}
+
+/* =====================================================
+   2. BASE (valable pour tous les écrans, mobile d’abord)
+   ===================================================== */
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:4rem}
+body{font:300 1rem/1.65 var(--texte);color:var(--encre);background:var(--creme);overflow-x:hidden}
+body:has(dialog[open]){overflow:hidden}              /* bloque le scroll derrière une fiche projet */
+img{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-family:var(--titre);font-weight:900;text-transform:uppercase;line-height:1;color:var(--rose)}
+h2{font-size:clamp(2rem,8vw,4.5rem)}
+h3{font-size:1.1rem;margin-bottom:.5rem}
+p+p{margin-top:1rem}
+.section{padding:4.5rem var(--marge)}
+.sur-rose{background:var(--rose);color:var(--creme)}
+.sur-rose h1,.sur-rose h2,.sur-rose h3{color:var(--creme)}
+:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+
+/* =====================================================
+   3. EN-TÊTE + MENU (burger sur mobile, liens sur ordinateur)
+   ===================================================== */
+header{position:fixed;inset:0 0 auto;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:.9rem var(--marge);background:var(--rose);color:var(--creme)}
+.logo{font:900 1rem var(--titre);text-decoration:none}
+#burger{background:none;border:0;color:inherit;font:600 1rem var(--texte);cursor:pointer}
+nav{position:fixed;inset:3.4rem 0 auto;display:grid;gap:1rem;padding:1.5rem var(--marge) 2rem;background:var(--rose);transform:translateY(-130%);transition:transform .4s var(--ease)}
+nav.ouvert{transform:none}
+nav a{font:900 1.6rem var(--titre);text-decoration:none}
+#progres{position:fixed;inset:0 0 auto;height:3px;z-index:30;background:var(--creme);transform:scaleX(0);transform-origin:0 50%}  /* barre de lecture */
+
+/* =====================================================
+   4. ACCUEIL — le moment animé de la page : le nom se lève ligne par ligne
+   ===================================================== */
+#accueil{min-height:100svh;padding-top:6rem;display:grid;gap:2rem;align-content:center}
+#accueil h1{font-size:clamp(2.8rem,14vw,9rem)}
+.mot{display:block;overflow:hidden}                    /* masque : le texte surgit du bas */
+.mot span{display:block;animation:monte 1s var(--ease) both;animation-delay:calc(var(--i)*.15s)}
+.intro{margin:1.5rem 0;max-width:36rem;font-size:1.1rem}
+/* Cadre aux coins, repris de ton book ✏️ */
+.cadre{position:relative;padding:1.5rem;max-width:36rem;font-style:italic;font-size:1.15rem}
+.cadre::before,.cadre::after{content:"";position:absolute;width:1.4rem;height:1.4rem;border:2px solid var(--creme)}
+.cadre::before{top:0;left:0;border-right:0;border-bottom:0}
+.cadre::after{right:0;bottom:0;border-left:0;border-top:0}
+.portrait{width:100%;max-height:60vh;object-fit:cover;object-position:top;animation:entre 1s .6s var(--ease) both}
+
+/* =====================================================
+   5. QUI SUIS-JE ?
+   ===================================================== */
+.duo{display:grid;gap:2.5rem;margin-top:2rem}
+.duo img{margin-top:1.5rem;width:100%}
+
+/* =====================================================
+   6. PROJETS : filtres + grille de cartes
+   ===================================================== */
+#filtres{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.5rem 0 2rem}
+.filtre{font:500 .9rem var(--texte);background:none;color:var(--creme);border:1.5px solid var(--creme);border-radius:2rem;padding:.4rem 1rem;cursor:pointer;transition:background .3s,color .3s}
+.filtre:hover,.filtre.actif{background:var(--creme);color:var(--rose)}
+#grille{display:grid;gap:1.25rem}
+.carte{position:relative;display:block;width:100%;aspect-ratio:4/3;padding:0;border:0;overflow:hidden;background:#8e0e3a;color:var(--creme);text-align:left;font:inherit;cursor:pointer}
+.carte.cache{display:none}
+.carte img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.carte:hover img,.carte:focus-visible img{transform:scale(1.06)}
+.carte span{position:absolute;inset:auto 0 0;padding:3rem 1rem 1rem;background:linear-gradient(transparent,rgba(43,11,23,.85))}
+.carte b{display:block;font:900 1.35rem/1.1 var(--titre);text-transform:uppercase}
+.carte small{font-size:.85rem}
+
+/* =====================================================
+   7. FICHE PROJET (fenêtre qui s’ouvre au clic sur une carte)
+   ===================================================== */
+dialog{width:min(100%,60rem);max-width:100%;height:100dvh;max-height:100dvh;margin:auto;padding:0;border:0;overflow:auto;background:var(--creme);color:var(--encre)}
+dialog[open]{animation:entre .4s var(--ease)}
+dialog::backdrop{background:rgba(43,11,23,.75)}
+.fermer{position:sticky;top:.75rem;z-index:2;display:block;width:2.6rem;height:2.6rem;margin:.75rem .75rem 0 auto;border:0;border-radius:50%;background:var(--rose);color:var(--creme);font-size:1.5rem;line-height:1;cursor:pointer}
+.fiche-corps{display:grid;gap:1.75rem;padding:0 var(--marge) 3rem}
+.fiche-corps h2{font-size:clamp(2rem,8vw,3.4rem)}
+.type{font-style:italic;margin-bottom:.4rem}
+.textes{display:grid;gap:1.25rem}
+.puces{display:flex;flex-wrap:wrap;gap:.5rem;padding:0;list-style:none}
+.puces li{padding:.2rem .85rem;border:1.5px solid var(--rose);border-radius:2rem;color:var(--rose);font-size:.9rem;font-weight:500}
+.etapes{display:grid;gap:1.25rem;padding:0;list-style:none;counter-reset:e}
+.etapes li{display:grid;grid-template-columns:3.2rem 1fr;gap:.75rem;counter-increment:e}
+.etapes li::before{content:counter(e,decimal-leading-zero);font:900 1.8rem/1 var(--titre);color:var(--rose)}
+.galerie{display:grid;gap:.75rem}
+.lien{justify-self:start;padding:.6rem 1.4rem;background:var(--rose);color:var(--creme);font-weight:600;text-decoration:none}
+
+/* =====================================================
+   8. CONTACT
+   ===================================================== */
+.contact a{display:block;margin-top:1rem;font:900 clamp(1.2rem,4.5vw,2.4rem)/1.1 var(--titre);overflow-wrap:anywhere;text-decoration:none}
+.contact a:hover{text-decoration:underline}
+.contact p{max-width:38rem;margin-top:1.5rem}
+
+/* =====================================================
+   9. ANIMATIONS
+   ===================================================== */
+@keyframes monte{from{transform:translateY(110%)}}
+@keyframes entre{from{opacity:0;transform:translateY(1.5rem)}}
+/* Apparition au scroll : le JS ajoute la classe .vu quand l’élément entre à l’écran */
+.js .reveal{opacity:0;transform:translateY(2rem);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0)*.08s)}
+.js .reveal.vu{opacity:1;transform:none}
+/* Respect des personnes qui désactivent les animations dans leur système */
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.js .reveal{opacity:1;transform:none}}
+
+/* =====================================================
+   10. TABLETTE ET ORDINATEUR (le mobile est le style de base ci-dessus)
+   ===================================================== */
+@media(min-width:48em){
+  #burger{display:none}
+  nav{position:static;display:flex;gap:2rem;padding:0;background:none;transform:none}
+  nav a{font:600 .95rem var(--texte)}
+  .duo,.galerie,#grille{grid-template-columns:repeat(2,1fr)}
+  .duo{gap:4rem}
+  .textes{grid-template-columns:repeat(3,1fr);gap:2rem}
+  dialog{height:auto;max-height:92dvh}
+}
+@media(min-width:64em){
+  #accueil{grid-template-columns:1.4fr 1fr;align-items:center;gap:4rem}
+  .portrait{max-height:75vh}
+  #grille{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+
+<body>
+<div id="progres"></div>
+
+<header>
+  <a class="logo" href="#accueil">Constance Riomet</a>
+  <button id="burger" aria-expanded="false" aria-controls="menu">Menu</button>
+  <!-- ✏️ Menu : change le texte ou ajoute un lien (href = id de la section visée) -->
+  <nav id="menu">
+    <a href="#apropos">Qui suis-je ?</a>
+    <a href="#projets">Projets</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+<!-- ============ ACCUEIL ============ -->
+<section id="accueil" class="section sur-rose">
+  <div>
+    <!-- --i = ordre d’apparition de chaque ligne du nom -->
+    <h1><span class="mot"><span style="--i:0">Constance</span></span><span class="mot"><span style="--i:1">Riomet</span></span></h1>
+    <p class="intro reveal">Étudiante en troisième année de DNMADe Numérique à Yzeure. Je travaille le design interactif, la communication visuelle, l’édition et l’illustration.</p>
+    <blockquote class="cadre reveal">Je suis à la recherche d’un DSAA pour l’année prochaine et je veux continuer mes études dans le domaine du design numérique.</blockquote>
+  </div>
+  <!-- ✏️ Remplace par ta photo (dossier "images"). Si le fichier est absent, l’image disparaît toute seule -->
+  <img class="portrait" src="images/constance.jpg" alt="Portrait de Constance Riomet" onerror="this.remove()">
+</section>
+
+<!-- ============ QUI SUIS-JE ? ============ -->
+<section id="apropos" class="section">
+  <h2 class="reveal">Qui suis-je ?</h2>
+  <div class="duo">
+    <div class="reveal">
+      <h3>En quelques mots…</h3>
+      <p>Je m’appelle Constance et je suis en dernière année de DNMADe Numérique à l’ESDMAA Jean Monnet d’Yzeure, où j’étudie le design interactif et, plus largement, la création graphique et numérique.</p>
+      <p>J’accorde une attention particulière aux détails et j’aime travailler de manière précise et rigoureuse. L’une des étapes que je préfère est le prototypage, en particulier sur Figma.</p>
+    </div>
+    <div class="reveal" style="--i:2">
+      <h3>Ma démarche</h3>
+      <p>Pour enrichir mes projets, je passe souvent par une phase d’expérimentations graphiques réalisées à la main, afin d’apporter davantage d’expressivité à mes productions.</p>
+      <!-- ✏️ Photo de l’expérimentation à l’encre (clé USB) -->
+      <img src="images/experimentation.jpg" alt="Tampons d’encre réalisés avec une clé USB" loading="lazy" onerror="this.remove()">
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJETS (cartes et fiches générées par le JavaScript plus bas) ============ -->
+<section id="projets" class="section sur-rose">
+  <h2 class="reveal">Projets</h2>
+  <div id="filtres"></div>
+  <div id="grille"></div>
+</section>
+</main>
+
+<dialog id="fiche" aria-labelledby="fiche-titre"></dialog>
+
+<!-- ============ CONTACT ============ -->
+<footer id="contact" class="section contact">
+  <h2 class="reveal">Merci pour votre lecture</h2>
+  <p class="reveal">Ce portfolio rassemble mes projets, mes démarches et mes expérimentations. J’espère qu’il transmet mes intentions et ma manière de concevoir le design.</p>
+  <!-- ✏️ Coordonnées -->
+  <a class="reveal" href="mailto:constance.riomet@gmail.com">constance.riomet@gmail.com</a>
+  <a class="reveal" href="tel:+33642176473">06 42 17 64 73</a>
+</footer>
+
+<script>
+/* =====================================================
+   ✏️ 1. TES PROJETS — c’est ici que tu modifies, ajoutes ou retires un projet.
+   Pour AJOUTER : copie un bloc { … } entre deux accolades, sépare-le par une virgule, change les textes.
+   - cat       : catégorie (crée automatiquement un bouton de filtre)
+   - img       : image de la carte et de la fiche (dossier "images")
+   - galerie   : autres images de la fiche (laisse [] s’il n’y en a pas)
+   - lien      : adresse d’une vidéo / d’un site (laisse "" pour ne rien afficher)
+   - etapes    : ta démarche (laisse [] pour masquer). Tu peux utiliser <b>gras</b> dans les textes.
+   Astuce : écris l’apostrophe ’ (et pas ') dans les textes.
+   ===================================================== */
+const PROJETS=[
+ {titre:"Street Art City",type:"Application mobile",cat:"Design interactif",
+  img:"images/street-art-city.jpg",galerie:["images/street-art-city-2.jpg","images/street-art-city-3.jpg"],lien:"",
+  contexte:"Résidence d’artistes dédiée au street art, à Lurcy-Lévis (Allier) : une centaine de fresques sur plus de 20 000 m² de murs, impossible à parcourir en une seule visite.",
+  demande:"Imaginer, fictivement, une application mobile pour planifier la visite et guider l’usager sur une journée.",
+  contraintes:"Application en français et en anglais : plan, artistes, œuvres et localisation, parcours prédéfinis ou suggérés selon les goûts, billetterie, infos d’accès.",
+  logiciels:["Figma","InDesign","Illustrator","Photoshop"],
+  etapes:["Analyse de références : applications culturelles et touristiques, cartes interactives, questionnaires de goûts.",
+          "Personas et cartographie de l’expérience utilisateur pour repérer les besoins prioritaires et les moments clés.",
+          "Refonte de l’identité visuelle : couleurs vives, dégradés, grain et typographie manuscrite.",
+          "Arborescence, wireframes, puis prototype Figma complet en français et en anglais."]},
+
+ {titre:"Hacka’Num",type:"Interface et spot publicitaire",cat:"Design interactif",
+  img:"images/hackanum.jpg",galerie:[],lien:"",   /* ✏️ colle ici l’adresse de la vidéo */
+  contexte:"Premier hackathon du DNMADe Numérique de Jean Monnet (2026) : 24 h en petits groupes, avec une nuit passée dans l’établissement.",
+  demande:"Imaginer un outil numérique innovant à l’ère de la colonisation spatiale, concevoir son interface et réaliser un spot publicitaire crédible, avec une touche d’humour.",
+  contraintes:"24 h, groupe de quatre, et une contrainte imposée toutes les six heures : un·e professeur·e dans le spot, une affiche, un partenariat avec un autre groupe.",
+  logiciels:["Blender","Adobe XD","Premiere Pro","After Effects"],
+  etapes:["Avec Emma Aptel, Antoine Mallet et Arthur Perrein, nous traitons l’agriculture dans le futur, sur un ton parodique.",
+          "Kora : une sphère holographique pour gérer des planètes agricoles achetées par les ultra-riches. J’ai modélisé la sphère sur Blender et rendu les animations du spot.",
+          "L’interface est prototypée et animée sur Adobe XD, puis le spot est monté sur Premiere Pro.",
+          "Notre projet obtient la <b>2e place du prix de la meilleure interface</b>."]},
+
+ {titre:"Palets d’Or",type:"Identité visuelle",cat:"Communication visuelle",
+  img:"images/palets-dor.jpg",galerie:[],lien:"",
+  contexte:"Chocolaterie emblématique de Moulins, connue pour son palet d’or : ganache au café, chocolat noir et paillette de feuille d’or.",
+  demande:"Projet fictif : repenser l’identité visuelle, concevoir un logo et une charte complète, puis la décliner sur un catalogue et les boîtes.",
+  contraintes:"Recherches et explorations graphiques uniquement sur papier au départ ; charte cohérente, complète et réaliste.",
+  logiciels:["Photoshop","InDesign","Illustrator"],
+  etapes:["Recherches sur papier, puis logo et charte graphique.","Déclinaisons : carte de visite, sac et boîte."]},
+
+ {titre:"Lycée Jean Monnet",type:"Supports imprimés",cat:"Communication visuelle",
+  img:"images/lycee-jean-monnet.jpg",galerie:[],lien:"",
+  contexte:"Le lycée d’Yzeure a mis à jour sa charte graphique et souhaite harmoniser ses supports imprimés.",
+  demande:"Concevoir un modèle de plaquette de formation et deux cartes de visite, sous forme de concours au sein de la classe.",
+  contraintes:"Respect strict de la charte ; présentation claire et professionnelle, déclinable pour toutes les filières.",
+  logiciels:["InDesign","Illustrator","Photoshop"],
+  etapes:["Chemin de fer et format A4 plié en trois, pensé pour la lecture : avant, pendant, après la formation.",
+          "Monstre imprimé sur papier pour régler la taille et l’emplacement des éléments.",
+          "Maquettage, infographies et QR code sur les cartes de visite.",
+          "Après l’entretien avec la direction, mes deux supports sont <b>retenus comme versions officielles</b> du lycée."]},
+
+ {titre:"Rapport de stages",type:"Objet d’édition",cat:"Édition",
+  img:"images/rapport-de-stages.jpg",galerie:[],lien:"",
+  contexte:"Deux stages de six semaines : à la mairie de Saint-Amand-Montrond, puis au parc scientifique Vulcania.",
+  demande:"Concevoir un objet éditorial retraçant mon parcours, mes missions et mes compétences.",
+  contraintes:"Entièrement imprimé et relié par mes soins, en plusieurs exemplaires, avec au moins deux papiers différents.",
+  logiciels:["InDesign","Illustrator","Web AR Studio"],
+  etapes:["Deux livrets pour traduire deux rythmes d’expérience, avec chacun sa propre identité.",
+          "Mairie : mise en page dynamique, reliure copte, jeux typographiques et QR codes en réalité augmentée. Vulcania : structure de roman, composition sobre.",
+          "Les deux livrets sont liés par la typographie Montserrat, du tissu et un élastique rouge."]},
+
+ {titre:"Mémoire : l’Internet",type:"Mémoire de fin d’études",cat:"Édition",
+  img:"images/memoire.jpg",galerie:[],lien:"",
+  contexte:"Analyse de design numérique sur un thème libre, rédigée en début de troisième année et soutenue à l’oral devant un jury.",
+  demande:"Répondre à une problématique, mettre l’écrit en page dans un objet éditorial et concevoir ma propre typographie.",
+  contraintes:"20 000 signes maximum, trois exemplaires imprimés et reliés, sources référencées.",
+  logiciels:["InDesign","Illustrator","Photoshop","Figma","FontForge"],
+  etapes:["Sujet : la culture Internet et l’émergence d’une esthétique du mauvais goût.",
+          "Mise en page inspirée de Windows XP, et typographie <b>The Worst Web Font</b> dessinée à partir d’une clé USB cassée.",
+          "Livret relié en copte, jaquette qui se déplie en poster, puis soutenance avec scénographie et support oral réalisé sur Figma."]},
+
+ {titre:"Coincé(e) dans mon jeu vidéo",type:"Carnet de croquis",cat:"Illustration",
+  img:"images/carnet-de-croquis.jpg",galerie:[],lien:"",
+  contexte:"Chaque année, plusieurs carnets de croquis sont complétés chaque semaine pour progresser en illustration. Thème : « Coincé.e dans mon jeu vidéo ».",
+  demande:"Imaginer un récit dans un jeu vidéo choisi dans une liste imposée, traduit en croquis et mis en forme comme un objet éditorial.",
+  contraintes:"Pas de format carnet classique ; dessins faits à la main avec au moins deux techniques et une gamme colorée définie à l’avance.",
+  logiciels:[],etapes:[]}
+];
+
+/* =====================================================
+   2. AFFICHAGE (tu n’as normalement pas besoin de toucher à la suite)
+   ===================================================== */
+const $=id=>document.getElementById(id);
+const liste=t=>t.map(x=>`<li>${x}</li>`).join("");
+
+/* Boutons de filtre : "Tous" + une catégorie par valeur de "cat" */
+const cats=["Tous",...new Set(PROJETS.map(p=>p.cat))];
+$("filtres").innerHTML=cats.map((c,i)=>`<button class="filtre${i?"":" actif"}">${c}</button>`).join("");
+
+/* Cartes de la grille */
+$("grille").innerHTML=PROJETS.map((p,i)=>`
+  <button class="carte reveal" style="--i:${i}" data-cat="${p.cat}" data-n="${i}">
+    ${p.img?`<img src="${p.img}" alt="" loading="lazy" onerror="this.remove()">`:""}
+    <span><small>${p.type}</small><b>${p.titre}</b></span>
+  </button>`).join("");
+
+/* Contenu de la fiche projet */
+function ouvrir(p){
+  $("fiche").innerHTML=`
+  <button class="fermer" aria-label="Fermer">×</button>
+  <div class="fiche-corps">
+    ${p.img?`<img src="${p.img}" alt="${p.titre}" onerror="this.remove()">`:""}
+    <header><p class="type">${p.type}</p><h2 id="fiche-titre">${p.titre}</h2></header>
+    <div class="textes">
+      <div><h3>Le contexte</h3><p>${p.contexte}</p></div>
+      <div><h3>La demande</h3><p>${p.demande}</p></div>
+      <div><h3>Les contraintes</h3><p>${p.contraintes}</p></div>
+    </div>
+    ${p.logiciels.length?`<ul class="puces">${liste(p.logiciels)}</ul>`:""}
+    ${p.etapes.length?`<div><h3>Ma démarche</h3><ol class="etapes">${liste(p.etapes)}</ol></div>`:""}
+    ${p.galerie.length?`<div class="galerie">${p.galerie.map(s=>`<img src="${s}" alt="" loading="lazy" onerror="this.remove()">`).join("")}</div>`:""}
+    ${p.lien?`<a class="lien" href="${p.lien}" target="_blank" rel="noopener">Voir en ligne</a>`:""}
+  </div>`;
+  $("fiche").showModal();
+  $("fiche").scrollTop=0;
+}
+$("grille").onclick=e=>{const c=e.target.closest(".carte");if(c)ouvrir(PROJETS[c.dataset.n])};
+$("fiche").onclick=e=>{if(e.target===$("fiche")||e.target.closest(".fermer"))$("fiche").close()}; /* croix ou clic à l’extérieur */
+
+/* Filtres : masque les cartes d’une autre catégorie puis rejoue leur apparition */
+$("filtres").onclick=e=>{
+  const b=e.target.closest(".filtre");if(!b)return;
+  $("filtres").querySelector(".actif").classList.remove("actif");b.classList.add("actif");
+  let n=0;
+  document.querySelectorAll(".carte").forEach(c=>{
+    const ok=b.textContent==="Tous"||c.dataset.cat===b.textContent;
+    c.classList.remove("vu");c.classList.toggle("cache",!ok);
+    if(ok)c.style.setProperty("--i",n++);
+  });
+  void $("grille").offsetWidth;                                   /* force le navigateur à relire la page */
+  document.querySelectorAll(".carte:not(.cache)").forEach(c=>c.classList.add("vu"));
+};
+
+/* Apparition au scroll */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add("vu");obs.unobserve(e.target)}
+}),{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+
+/* Menu burger (mobile) */
+const fermerMenu=o=>{$("menu").classList.toggle("ouvert",o);$("burger").setAttribute("aria-expanded",o)};
+$("burger").onclick=()=>fermerMenu(!$("menu").classList.contains("ouvert"));
+$("menu").onclick=e=>{if(e.target.tagName==="A")fermerMenu(false)};
+
+/* Barre de progression de lecture */
+addEventListener("scroll",()=>{
+  $("progres").style.transform=`scaleX(${scrollY/(document.documentElement.scrollHeight-innerHeight)})`;
+},{passive:true});
+</script>
+</body>
+</html>
