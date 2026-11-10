@@ -2,230 +2,256 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<!-- Mobile first : indispensable pour que la page s’adapte aux téléphones -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Constance Riomet – Portfolio 2026</title>
-<meta name="description" content="Portfolio de Constance Riomet, étudiante en DNMADe Numérique : design interactif, communication visuelle, édition, illustration.">
-<!-- Prévient le CSS que JavaScript fonctionne (sans JS, tout reste visible) -->
+<title>Constance Riomet – Portfolio</title>
+<meta name="description" content="Portfolio de Constance Riomet, étudiante en design numérique : design interactif, communication visuelle, édition, illustration.">
+<meta name="theme-color" content="#b5134b">
+<!-- Indique au CSS que JavaScript fonctionne (sans JS, tout reste visible) -->
 <script>document.documentElement.classList.add("js")</script>
-<!-- Work Sans : chargée depuis Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300..700;1,300..500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300..900&display=swap" rel="stylesheet">
 
 <style>
 /* =====================================================
-   1. COULEURS, POLICES, TAILLES  ✏️ le plus simple à modifier
+   1. COULEURS ET POLICES  ✏️ le plus simple à modifier
    ===================================================== */
-/* Area n’est pas sur Google Fonts : place ton fichier dans un dossier "fonts"
-   et corrige le nom ci-dessous. Sans fichier, Work Sans (gras) prend le relais. */
+/* Area n’est pas sur Google Fonts : place ton fichier dans "fonts/" et corrige le nom.
+   Sans fichier, Work Sans prend le relais. Pour avoir Work Sans partout (comme sur tes maquettes),
+   remplace simplement --titre par var(--texte). */
 @font-face{font-family:"Area";src:url("fonts/Area.woff2") format("woff2");font-weight:100 900;font-display:swap}
-
 :root{
-  --rose:#b5134b;          /* couleur principale (le rose-rouge de ton book) */
-  --creme:#fbf5f1;         /* fond clair */
-  --encre:#2b0b17;         /* texte */
-  --titre:"Area","Work Sans",system-ui,sans-serif;   /* titres */
-  --texte:"Work Sans",system-ui,sans-serif;          /* textes */
-  --marge:clamp(1.25rem,5vw,4rem);                   /* marges latérales */
-  --ease:cubic-bezier(.2,.7,.2,1);                   /* douceur des animations */
+  --rose:#b5134b;  --creme:#faf5f1;
+  --titre:"Area","Work Sans",system-ui,sans-serif;
+  --texte:"Work Sans",system-ui,sans-serif;
+  --marge:clamp(1.25rem,6vw,8rem);
+  --ease:cubic-bezier(.2,.7,.2,1);
 }
 
 /* =====================================================
-   2. BASE (valable pour tous les écrans, mobile d’abord)
+   2. BASE + CHANGEMENT DE COULEUR AU SCROLL
+   Le JS met data-theme="rose" ou "creme" sur <body> selon la section visible.
+   --bg = fond, --fg = texte. Tout le site s’adapte, avec une transition douce.
    ===================================================== */
 *{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth;scroll-padding-top:4rem}
-body{font:300 1rem/1.65 var(--texte);color:var(--encre);background:var(--creme);overflow-x:hidden}
-body:has(dialog[open]){overflow:hidden}              /* bloque le scroll derrière une fiche projet */
+html{scroll-behavior:smooth}
+body{--bg:var(--rose);--fg:var(--creme);background:var(--bg);color:var(--fg);font:400 1rem/1.6 var(--texte);overflow-x:hidden;transition:background-color .9s ease,color .9s ease}
+body[data-theme="creme"]{--bg:var(--creme);--fg:var(--rose)}
+body.intro,body:has(dialog[open]){overflow:hidden}      /* bloque le scroll pendant l’intro et derrière une fiche */
 img{display:block;max-width:100%}
 a{color:inherit}
-h1,h2,h3{font-family:var(--titre);font-weight:900;text-transform:uppercase;line-height:1;color:var(--rose)}
-h2{font-size:clamp(2rem,8vw,4.5rem)}
-h3{font-size:1.1rem;margin-bottom:.5rem}
-p+p{margin-top:1rem}
-.section{padding:4.5rem var(--marge)}
-.sur-rose{background:var(--rose);color:var(--creme)}
-.sur-rose h1,.sur-rose h2,.sur-rose h3{color:var(--creme)}
-:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+h1,h2,h3,h4{font-family:var(--titre);line-height:1.1}
+h2{font-size:clamp(2rem,4vw,3.6rem);font-weight:800}
+section{min-height:100svh;padding:7rem var(--marge) 4rem;display:grid;align-content:center}
+:focus-visible{outline:3px solid currentColor;outline-offset:4px}
 
 /* =====================================================
-   3. EN-TÊTE + MENU (burger sur mobile, liens sur ordinateur)
+   3. PETIT HEADER EN PILULE (caché sur l’accueil, glisse ensuite depuis le haut)
+   La pastille suit la section lue ; ses couleurs s’inversent avec le thème.
    ===================================================== */
-header{position:fixed;inset:0 0 auto;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:.9rem var(--marge);background:var(--rose);color:var(--creme)}
-.logo{font:900 1rem var(--titre);text-decoration:none}
-#burger{background:none;border:0;color:inherit;font:600 1rem var(--texte);cursor:pointer}
-nav{position:fixed;inset:3.4rem 0 auto;display:grid;gap:1rem;padding:1.5rem var(--marge) 2rem;background:var(--rose);transform:translateY(-130%);transition:transform .4s var(--ease)}
-nav.ouvert{transform:none}
-nav a{font:900 1.6rem var(--titre);text-decoration:none}
-#progres{position:fixed;inset:0 0 auto;height:3px;z-index:30;background:var(--creme);transform:scaleX(0);transform-origin:0 50%}  /* barre de lecture */
+nav{position:fixed;top:1.25rem;left:50%;z-index:20;display:flex;border:3px solid currentColor;border-radius:3rem;color:var(--fg);transform:translate(-50%,-200%);opacity:0;transition:transform .7s var(--ease),opacity .5s,color .9s,border-color .9s}
+nav.visible{transform:translate(-50%,0);opacity:1}
+nav a{position:relative;z-index:1;padding:.55rem clamp(.8rem,3vw,1.4rem);font-weight:700;font-size:clamp(.85rem,2.6vw,1.15rem);text-decoration:none;white-space:nowrap;transition:color .5s}
+nav a.actif{color:var(--bg)}
+.pastille{position:absolute;top:0;bottom:0;left:0;border-radius:3rem;background:currentColor;transition:transform .5s var(--ease),width .5s var(--ease)}
 
 /* =====================================================
-   4. ACCUEIL — le moment animé de la page : le nom se lève ligne par ligne
+   4. ACCUEIL : « CR » devient « Constance Riomet »
+   Les lettres cachées (.ex) s’ouvrent de 0 à leur largeur réelle quand le JS ajoute .ouvert
    ===================================================== */
-#accueil{min-height:100svh;padding-top:6rem;display:grid;gap:2rem;align-content:center}
-#accueil h1{font-size:clamp(2.8rem,14vw,9rem)}
-.mot{display:block;overflow:hidden}                    /* masque : le texte surgit du bas */
-.mot span{display:block;animation:monte 1s var(--ease) both;animation-delay:calc(var(--i)*.15s)}
-.intro{margin:1.5rem 0;max-width:36rem;font-size:1.1rem}
-/* Cadre aux coins, repris de ton book ✏️ */
-.cadre{position:relative;padding:1.5rem;max-width:36rem;font-style:italic;font-size:1.15rem}
-.cadre::before,.cadre::after{content:"";position:absolute;width:1.4rem;height:1.4rem;border:2px solid var(--creme)}
-.cadre::before{top:0;left:0;border-right:0;border-bottom:0}
-.cadre::after{right:0;bottom:0;border-left:0;border-top:0}
-.portrait{width:100%;max-height:60vh;object-fit:cover;object-position:top;animation:entre 1s .6s var(--ease) both}
+#accueil{place-items:center;text-align:center;padding:0 var(--marge)}
+.centre{position:relative}
+h1{font-size:clamp(1.9rem,8.6vw,5.8rem);font-weight:900;white-space:nowrap;animation:entre 1s var(--ease) both}
+.ex{display:inline-grid;grid-template-columns:0fr;transition:grid-template-columns 1.3s var(--ease)}
+.ex>span{overflow:hidden;min-width:0}
+.ouvert .ex{grid-template-columns:1fr}
+.sous{position:absolute;top:100%;left:0;right:0;margin-top:.5rem;font-size:clamp(1.1rem,3.2vw,2.2rem);font-weight:300}
+.sous,.decouvrir{opacity:0;transition:opacity 1s .9s}
+.ouvert .sous,.ouvert .decouvrir{opacity:1}
+/* Flèche : le texte « Me découvrir » apparaît seulement au survol de la flèche */
+.decouvrir{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);padding:.75rem;line-height:0}
+.decouvrir svg{width:2.2rem;height:2.2rem;animation:rebond 2s ease-in-out infinite}
+.decouvrir span{position:absolute;bottom:100%;left:50%;transform:translate(-50%,.5rem);font:400 clamp(1.1rem,2vw,1.5rem)/1.2 var(--texte);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .4s,transform .4s var(--ease)}
+.decouvrir:hover span,.decouvrir:focus-visible span{opacity:1;transform:translate(-50%,0)}
+@media(hover:none){.decouvrir span{opacity:1;transform:translate(-50%,0)}}   /* pas de survol sur mobile : texte toujours visible */
 
 /* =====================================================
-   5. QUI SUIS-JE ?
+   5. QUI SUIS-JE ? (photo détourée, bord bas fondu)
    ===================================================== */
-.duo{display:grid;gap:2.5rem;margin-top:2rem}
-.duo img{margin-top:1.5rem;width:100%}
+#apropos{padding-bottom:0;align-content:end}
+.duo{display:grid;gap:1.5rem;align-items:end}
+.portrait{order:2;width:min(75%,24rem);max-height:55svh;margin:0 auto;object-fit:contain;object-position:bottom;-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.bio{padding-bottom:1rem;font-size:clamp(1.1rem,1.9vw,1.9rem);font-weight:300}
+.bio h2{margin-bottom:1.5rem}
+.bio p+p{margin-top:1.25rem}
+.bio b{font-weight:700}
 
 /* =====================================================
-   6. PROJETS : filtres + grille de cartes
+   6. PROJETS : carrousel
    ===================================================== */
-#filtres{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.5rem 0 2rem}
-.filtre{font:500 .9rem var(--texte);background:none;color:var(--creme);border:1.5px solid var(--creme);border-radius:2rem;padding:.4rem 1rem;cursor:pointer;transition:background .3s,color .3s}
-.filtre:hover,.filtre.actif{background:var(--creme);color:var(--rose)}
-#grille{display:grid;gap:1.25rem}
-.carte{position:relative;display:block;width:100%;aspect-ratio:4/3;padding:0;border:0;overflow:hidden;background:#8e0e3a;color:var(--creme);text-align:left;font:inherit;cursor:pointer}
-.carte.cache{display:none}
-.carte img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
-.carte:hover img,.carte:focus-visible img{transform:scale(1.06)}
-.carte span{position:absolute;inset:auto 0 0;padding:3rem 1rem 1rem;background:linear-gradient(transparent,rgba(43,11,23,.85))}
-.carte b{display:block;font:900 1.35rem/1.1 var(--titre);text-transform:uppercase}
-.carte small{font-size:.85rem}
+#projets{text-align:center}
+#projets h2{margin-bottom:2rem}
+.carrousel{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"vue vue vue" "prec points suiv";gap:1.25rem 1rem;align-items:center;width:100%;max-width:92rem;margin:0 auto}
+.vue{grid-area:vue;overflow:hidden;touch-action:pan-y}          /* pan-y : le swipe horizontal change de projet */
+.piste{display:flex;transition:transform .7s var(--ease)}
+.prec{grid-area:prec}.suiv{grid-area:suiv}.points{grid-area:points}
+.fleche{background:none;border:0;padding:.4rem;color:var(--fg);cursor:pointer;line-height:0;transition:color .9s,transform .3s var(--ease)}
+.fleche svg{width:2.4rem;height:2.4rem}
+.prec:hover{transform:translateX(-.3rem)}.suiv:hover{transform:translateX(.3rem)}
+.points{display:flex;justify-content:center;gap:.6rem}
+.points button{width:.9rem;height:.9rem;padding:0;border:2px solid var(--fg);border-radius:50%;background:none;cursor:pointer;transition:background-color .4s,border-color .9s}
+.points button[aria-current="true"]{background:var(--fg)}
+/* La carte (toujours crème, quel que soit le thème) */
+.projet{flex:0 0 100%;display:grid;text-align:left;background:var(--creme);color:var(--rose);border:3px solid var(--creme);border-radius:2rem;overflow:hidden}
+.visuel{background:#000;aspect-ratio:4/3}
+.visuel img{width:100%;height:100%;object-fit:cover}
+.infos{display:flex;flex-direction:column;gap:1rem;padding:1.5rem}
+.type{font-size:clamp(1rem,1.6vw,1.4rem);font-weight:300}
+.infos h3{font-size:clamp(1.6rem,3vw,2.8rem);font-weight:800;text-transform:uppercase}
+.infos h4{margin-bottom:.4rem;font-size:1.1rem;font-weight:800;text-transform:uppercase}
+.infos p{font-size:.95rem}
+.bas{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:auto}
+.puces{display:contents;list-style:none}
+.puces li,.plus{padding:.3rem .9rem;border:0;border-radius:2rem;background:var(--rose);color:var(--creme);font:600 .85rem var(--texte)}
+.plus{margin-left:auto;cursor:pointer;transition:transform .3s var(--ease)}
+.plus:hover{transform:scale(1.06)}
+@media(min-width:64em){
+  .carrousel{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"prec vue suiv" ". points ."}
+  .projet{grid-template-columns:1fr 1fr;min-height:34rem;border-radius:4rem}
+  .visuel{aspect-ratio:auto}
+  .infos{padding:3rem}
+}
 
 /* =====================================================
-   7. FICHE PROJET (fenêtre qui s’ouvre au clic sur une carte)
+   7. FICHE DÉTAIL (s’ouvre avec « Voir le détail »)
    ===================================================== */
-dialog{width:min(100%,60rem);max-width:100%;height:100dvh;max-height:100dvh;margin:auto;padding:0;border:0;overflow:auto;background:var(--creme);color:var(--encre)}
+dialog{width:min(100%,60rem);max-width:100%;height:100dvh;max-height:100dvh;margin:auto;padding:0;border:0;overflow:auto;background:var(--creme);color:var(--rose)}
 dialog[open]{animation:entre .4s var(--ease)}
 dialog::backdrop{background:rgba(43,11,23,.75)}
 .fermer{position:sticky;top:.75rem;z-index:2;display:block;width:2.6rem;height:2.6rem;margin:.75rem .75rem 0 auto;border:0;border-radius:50%;background:var(--rose);color:var(--creme);font-size:1.5rem;line-height:1;cursor:pointer}
 .fiche-corps{display:grid;gap:1.75rem;padding:0 var(--marge) 3rem}
-.fiche-corps h2{font-size:clamp(2rem,8vw,3.4rem)}
-.type{font-style:italic;margin-bottom:.4rem}
+.fiche-corps h2{text-transform:uppercase}
+.fiche-corps h3{margin-bottom:.5rem;font-size:1.1rem;font-weight:800;text-transform:uppercase}
 .textes{display:grid;gap:1.25rem}
-.puces{display:flex;flex-wrap:wrap;gap:.5rem;padding:0;list-style:none}
-.puces li{padding:.2rem .85rem;border:1.5px solid var(--rose);border-radius:2rem;color:var(--rose);font-size:.9rem;font-weight:500}
 .etapes{display:grid;gap:1.25rem;padding:0;list-style:none;counter-reset:e}
 .etapes li{display:grid;grid-template-columns:3.2rem 1fr;gap:.75rem;counter-increment:e}
-.etapes li::before{content:counter(e,decimal-leading-zero);font:900 1.8rem/1 var(--titre);color:var(--rose)}
+.etapes li::before{content:counter(e,decimal-leading-zero);font:800 1.8rem/1 var(--titre)}
 .galerie{display:grid;gap:.75rem}
-.lien{justify-self:start;padding:.6rem 1.4rem;background:var(--rose);color:var(--creme);font-weight:600;text-decoration:none}
+.lien{justify-self:start;padding:.6rem 1.4rem;border-radius:2rem;background:var(--rose);color:var(--creme);font-weight:600;text-decoration:none}
+@media(min-width:48em){dialog{height:auto;max-height:92dvh}.textes{grid-template-columns:repeat(3,1fr);gap:2rem}.galerie{grid-template-columns:1fr 1fr}}
 
 /* =====================================================
-   8. CONTACT
+   8. CONTACT : l’info apparaît sous le titre au survol du bouton correspondant
    ===================================================== */
-.contact a{display:block;margin-top:1rem;font:900 clamp(1.2rem,4.5vw,2.4rem)/1.1 var(--titre);overflow-wrap:anywhere;text-decoration:none}
-.contact a:hover{text-decoration:underline}
-.contact p{max-width:38rem;margin-top:1.5rem}
+.contact{display:grid;gap:2rem;align-items:center}
+.info{min-height:2.4rem;margin-top:1rem;font-size:clamp(1.2rem,2.4vw,2rem);font-weight:300;overflow-wrap:anywhere;text-decoration:underline;opacity:0;transition:opacity .3s}
+.info.on{opacity:1}
+.boutons{display:flex;gap:clamp(.6rem,2vw,1.8rem)}
+.btn{display:grid;place-items:center;flex:1;max-width:6.6rem;aspect-ratio:1;border:3px solid currentColor;border-radius:28%;transition:background-color .35s,color .35s,transform .35s var(--ease)}
+.btn svg{width:48%;fill:currentColor}
+.btn:hover,.btn:focus-visible{background:var(--fg);color:var(--bg);transform:translateY(-.4rem) rotate(-4deg)}
+.copy{margin-top:3rem;font-size:.85rem;font-weight:300}
+@media(min-width:48em){.contact{grid-template-columns:1fr auto}}
 
 /* =====================================================
    9. ANIMATIONS
    ===================================================== */
-@keyframes monte{from{transform:translateY(110%)}}
 @keyframes entre{from{opacity:0;transform:translateY(1.5rem)}}
-/* Apparition au scroll : le JS ajoute la classe .vu quand l’élément entre à l’écran */
-.js .reveal{opacity:0;transform:translateY(2rem);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0)*.08s)}
+@keyframes rebond{50%{transform:translateY(.4rem)}}
+/* Apparition au scroll : le JS ajoute .vu quand l’élément entre à l’écran ; --i décale les éléments */
+.js .reveal{opacity:0;transform:translateY(2rem);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0)*.1s)}
 .js .reveal.vu{opacity:1;transform:none}
-/* Respect des personnes qui désactivent les animations dans leur système */
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.js .reveal{opacity:1;transform:none}}
 
 /* =====================================================
-   10. TABLETTE ET ORDINATEUR (le mobile est le style de base ci-dessus)
+   10. TABLETTE / ORDINATEUR (le mobile est le style de base)
    ===================================================== */
 @media(min-width:48em){
-  #burger{display:none}
-  nav{position:static;display:flex;gap:2rem;padding:0;background:none;transform:none}
-  nav a{font:600 .95rem var(--texte)}
-  .duo,.galerie,#grille{grid-template-columns:repeat(2,1fr)}
-  .duo{gap:4rem}
-  .textes{grid-template-columns:repeat(3,1fr);gap:2rem}
-  dialog{height:auto;max-height:92dvh}
-}
-@media(min-width:64em){
-  #accueil{grid-template-columns:1.4fr 1fr;align-items:center;gap:4rem}
-  .portrait{max-height:75vh}
-  #grille{grid-template-columns:repeat(3,1fr)}
+  .duo{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:4rem}
+  .portrait{order:0;width:100%;max-height:75svh}
+  .bio{align-self:center;padding-bottom:4rem}
 }
 </style>
 </head>
 
-<body>
-<div id="progres"></div>
+<body class="intro" data-theme="rose">
 
-<header>
-  <a class="logo" href="#accueil">Constance Riomet</a>
-  <button id="burger" aria-expanded="false" aria-controls="menu">Menu</button>
-  <!-- ✏️ Menu : change le texte ou ajoute un lien (href = id de la section visée) -->
-  <nav id="menu">
-    <a href="#apropos">Qui suis-je ?</a>
-    <a href="#projets">Projets</a>
-    <a href="#contact">Contact</a>
-  </nav>
-</header>
+<!-- ✏️ Menu : chaque href doit correspondre à l’id d’une section -->
+<nav id="menu" aria-label="Navigation">
+  <span class="pastille"></span>
+  <a href="#apropos">Qui suis-je ?</a>
+  <a href="#projets">Projets</a>
+  <a href="#contact">Contact</a>
+</nav>
 
 <main>
 <!-- ============ ACCUEIL ============ -->
-<section id="accueil" class="section sur-rose">
-  <div>
-    <!-- --i = ordre d’apparition de chaque ligne du nom -->
-    <h1><span class="mot"><span style="--i:0">Constance</span></span><span class="mot"><span style="--i:1">Riomet</span></span></h1>
-    <p class="intro reveal">Étudiante en troisième année de DNMADe Numérique à Yzeure. Je travaille le design interactif, la communication visuelle, l’édition et l’illustration.</p>
-    <blockquote class="cadre reveal">Je suis à la recherche d’un DSAA pour l’année prochaine et je veux continuer mes études dans le domaine du design numérique.</blockquote>
+<section id="accueil" data-theme="rose">
+  <div class="centre">
+    <!-- C et R restent ; le reste du nom (.ex) s’ouvre après l’intro -->
+    <h1>C<span class="ex"><span>onstance&nbsp;</span></span>R<span class="ex"><span>iomet</span></span></h1>
+    <p class="sous">Étudiante en design numérique</p>   <!-- ✏️ -->
   </div>
-  <!-- ✏️ Remplace par ta photo (dossier "images"). Si le fichier est absent, l’image disparaît toute seule -->
-  <img class="portrait" src="images/constance.jpg" alt="Portrait de Constance Riomet" onerror="this.remove()">
+  <a class="decouvrir" href="#apropos" aria-label="Me découvrir">
+    <span>Me découvrir</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16m-6-6 6 6 6-6"/></svg>
+  </a>
 </section>
 
 <!-- ============ QUI SUIS-JE ? ============ -->
-<section id="apropos" class="section">
-  <h2 class="reveal">Qui suis-je ?</h2>
+<section id="apropos" data-theme="creme">
   <div class="duo">
-    <div class="reveal">
-      <h3>En quelques mots…</h3>
-      <p>Je m’appelle Constance et je suis en dernière année de DNMADe Numérique à l’ESDMAA Jean Monnet d’Yzeure, où j’étudie le design interactif et, plus largement, la création graphique et numérique.</p>
-      <p>J’accorde une attention particulière aux détails et j’aime travailler de manière précise et rigoureuse. L’une des étapes que je préfère est le prototypage, en particulier sur Figma.</p>
-    </div>
-    <div class="reveal" style="--i:2">
-      <h3>Ma démarche</h3>
-      <p>Pour enrichir mes projets, je passe souvent par une phase d’expérimentations graphiques réalisées à la main, afin d’apporter davantage d’expressivité à mes productions.</p>
-      <!-- ✏️ Photo de l’expérimentation à l’encre (clé USB) -->
-      <img src="images/experimentation.jpg" alt="Tampons d’encre réalisés avec une clé USB" loading="lazy" onerror="this.remove()">
+    <!-- ✏️ Photo détourée (PNG à fond transparent) dans le dossier "images" -->
+    <img class="portrait reveal" src="images/constance.png" alt="Portrait de Constance Riomet" onerror="this.remove()">
+    <div class="bio reveal" style="--i:2">
+      <h2>En quelques mots…</h2>
+      <p>Je m’appelle Constance et je suis actuellement en <b>Master Design d’Environnements Numériques</b> à l’Université de Strasbourg. J’étudie le design d’interfaces et interactif et plus largement la <b>création graphique et numérique.</b></p>
+      <p>Dans la réalisation de mes projets, j’apprécie accorder une attention particulière aux détails et travailler de manière <b>précise et rigoureuse.</b></p>
     </div>
   </div>
 </section>
 
-<!-- ============ PROJETS (cartes et fiches générées par le JavaScript plus bas) ============ -->
-<section id="projets" class="section sur-rose">
-  <h2 class="reveal">Projets</h2>
-  <div id="filtres"></div>
-  <div id="grille"></div>
+<!-- ============ PROJETS (diapositives générées par le JS à partir de PROJETS) ============ -->
+<section id="projets" data-theme="rose">
+  <h2 class="reveal">Mes projets</h2>
+  <div class="carrousel reveal" aria-roledescription="carrousel" aria-label="Mes projets">
+    <button class="fleche prec" aria-label="Projet précédent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4m6-6-6 6 6 6"/></svg></button>
+    <div class="vue"><div class="piste" id="piste"></div></div>
+    <button class="fleche suiv" aria-label="Projet suivant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></button>
+    <div class="points" id="points"></div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" data-theme="creme">
+  <div class="contact">
+    <div class="reveal">
+      <h2>Contactez-moi !</h2>
+      <p class="info" id="info" aria-live="polite"></p>   <!-- reçoit le texte du bouton survolé -->
+    </div>
+    <!-- ✏️ data-info = texte affiché au survol. Remplace les liens LinkedIn / Instagram par les tiens -->
+    <div class="boutons">
+      <a class="btn reveal" style="--i:1" href="mailto:constance.riomet@gmail.com" data-info="constance.riomet@gmail.com" aria-label="E-mail"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v.4l-10 6.3L2 6.4V6a1 1 0 0 1 1-1zm19 3.7V18a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8.7l10 6.3 10-6.3z"/></svg></a>
+      <a class="btn reveal" style="--i:2" href="tel:+33642176473" data-info="06 42 17 64 73" aria-label="Téléphone"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></a>
+      <a class="btn reveal" style="--i:3" href="https://www.linkedin.com/in/ton-profil" data-info="LinkedIn" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm2.6 7v7.4h2.3V10H6.6zm1.15-3.6a1.35 1.35 0 1 0 0 2.7 1.35 1.35 0 0 0 0-2.7zM10.6 10v7.4h2.3v-3.9c0-1 .5-1.7 1.4-1.7.8 0 1.2.6 1.2 1.6v4h2.3v-4.4c0-2.1-1.1-3.2-2.7-3.2-1 0-1.8.5-2.2 1.2V10h-2.3z"/></svg></a>
+      <a class="btn reveal" style="--i:4" href="https://www.instagram.com/ton-compte" data-info="Instagram" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm5 4.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 2a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm5.2-2.7a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg></a>
+    </div>
+  </div>
+  <p class="copy">© 2026 Constance Riomet</p>
 </section>
 </main>
 
 <dialog id="fiche" aria-labelledby="fiche-titre"></dialog>
 
-<!-- ============ CONTACT ============ -->
-<footer id="contact" class="section contact">
-  <h2 class="reveal">Merci pour votre lecture</h2>
-  <p class="reveal">Ce portfolio rassemble mes projets, mes démarches et mes expérimentations. J’espère qu’il transmet mes intentions et ma manière de concevoir le design.</p>
-  <!-- ✏️ Coordonnées -->
-  <a class="reveal" href="mailto:constance.riomet@gmail.com">constance.riomet@gmail.com</a>
-  <a class="reveal" href="tel:+33642176473">06 42 17 64 73</a>
-</footer>
-
 <script>
 /* =====================================================
-   ✏️ 1. TES PROJETS — c’est ici que tu modifies, ajoutes ou retires un projet.
-   Pour AJOUTER : copie un bloc { … } entre deux accolades, sépare-le par une virgule, change les textes.
-   - cat       : catégorie (crée automatiquement un bouton de filtre)
-   - img       : image de la carte et de la fiche (dossier "images")
-   - galerie   : autres images de la fiche (laisse [] s’il n’y en a pas)
-   - lien      : adresse d’une vidéo / d’un site (laisse "" pour ne rien afficher)
-   - etapes    : ta démarche (laisse [] pour masquer). Tu peux utiliser <b>gras</b> dans les textes.
+   ✏️ 1. TES PROJETS — modifie, ajoute ou retire un projet ici.
+   Pour AJOUTER : copie un bloc { … }, sépare-le par une virgule, change les textes.
+   - type      : petite ligne au-dessus du titre
+   - img       : image de la diapositive (dossier "images")
+   - galerie   : autres images de la fiche détail ([] s’il n’y en a pas)
+   - lien      : adresse d’une vidéo / d’un site ("" pour ne rien afficher)
+   - etapes    : ta démarche ([] pour masquer). Tu peux utiliser <b>gras</b>.
    Astuce : écris l’apostrophe ’ (et pas ') dans les textes.
    ===================================================== */
 const PROJETS=[
@@ -299,74 +325,99 @@ const PROJETS=[
 ];
 
 /* =====================================================
-   2. AFFICHAGE (tu n’as normalement pas besoin de toucher à la suite)
+   2. FONCTIONNEMENT (tu n’as normalement pas besoin de toucher à la suite)
    ===================================================== */
 const $=id=>document.getElementById(id);
 const liste=t=>t.map(x=>`<li>${x}</li>`).join("");
+const reduit=matchMedia("(prefers-reduced-motion:reduce)").matches;
 
-/* Boutons de filtre : "Tous" + une catégorie par valeur de "cat" */
-const cats=["Tous",...new Set(PROJETS.map(p=>p.cat))];
-$("filtres").innerHTML=cats.map((c,i)=>`<button class="filtre${i?"":" actif"}">${c}</button>`).join("");
+/* --- Intro : « CR » puis le nom complet (durées en millisecondes ✏️) --- */
+setTimeout(()=>{$("accueil").classList.add("ouvert")},reduit?0:900);
+setTimeout(()=>document.body.classList.remove("intro"),reduit?0:2600);
 
-/* Cartes de la grille */
-$("grille").innerHTML=PROJETS.map((p,i)=>`
-  <button class="carte reveal" style="--i:${i}" data-cat="${p.cat}" data-n="${i}">
-    ${p.img?`<img src="${p.img}" alt="" loading="lazy" onerror="this.remove()">`:""}
-    <span><small>${p.type}</small><b>${p.titre}</b></span>
-  </button>`).join("");
+/* --- Carrousel --- */
+$("piste").innerHTML=PROJETS.map((p,i)=>`
+  <article class="projet" aria-roledescription="diapositive" aria-label="${i+1} sur ${PROJETS.length}">
+    <div class="visuel">${p.img?`<img src="${p.img}" alt="${p.titre}" loading="lazy" onerror="this.remove()">`:""}</div>
+    <div class="infos">
+      <p class="type">${p.type}</p><h3>${p.titre}</h3>
+      <div><h4>Le contexte</h4><p>${p.contexte}</p></div>
+      <div><h4>La demande</h4><p>${p.demande}</p></div>
+      <div class="bas"><ul class="puces">${liste(p.logiciels)}</ul><button class="plus" data-n="${i}">Voir le détail</button></div>
+    </div>
+  </article>`).join("");
+$("points").innerHTML=PROJETS.map((p,i)=>`<button aria-label="Projet ${i+1} : ${p.titre}"></button>`).join("");
+const slides=[...document.querySelectorAll(".projet")],points=[...$("points").children];
+let cur=0;
+function aller(i){
+  cur=(i+slides.length)%slides.length;                         /* revient au début après le dernier */
+  $("piste").style.transform=`translateX(${-cur*100}%)`;
+  slides.forEach((s,k)=>s.inert=k!==cur);                      /* seule la diapositive visible est accessible */
+  points.forEach((p,k)=>p.setAttribute("aria-current",k===cur));
+}
+aller(0);
+document.querySelector(".prec").onclick=()=>aller(cur-1);
+document.querySelector(".suiv").onclick=()=>aller(cur+1);
+points.forEach((p,k)=>p.onclick=()=>aller(k));
+document.querySelector(".carrousel").onkeydown=e=>{if(e.key==="ArrowLeft")aller(cur-1);if(e.key==="ArrowRight")aller(cur+1)};
+let x0=null;                                                   /* glisser au doigt ou à la souris */
+const vue=document.querySelector(".vue");
+vue.onpointerdown=e=>x0=e.clientX;
+vue.onpointerup=e=>{if(x0!==null&&Math.abs(e.clientX-x0)>50)aller(cur+(e.clientX<x0?1:-1));x0=null};
 
-/* Contenu de la fiche projet */
+/* --- Fiche détail --- */
+$("piste").onclick=e=>{const b=e.target.closest(".plus");if(b)ouvrir(PROJETS[b.dataset.n])};
 function ouvrir(p){
   $("fiche").innerHTML=`
   <button class="fermer" aria-label="Fermer">×</button>
   <div class="fiche-corps">
-    ${p.img?`<img src="${p.img}" alt="${p.titre}" onerror="this.remove()">`:""}
     <header><p class="type">${p.type}</p><h2 id="fiche-titre">${p.titre}</h2></header>
     <div class="textes">
       <div><h3>Le contexte</h3><p>${p.contexte}</p></div>
       <div><h3>La demande</h3><p>${p.demande}</p></div>
       <div><h3>Les contraintes</h3><p>${p.contraintes}</p></div>
     </div>
-    ${p.logiciels.length?`<ul class="puces">${liste(p.logiciels)}</ul>`:""}
     ${p.etapes.length?`<div><h3>Ma démarche</h3><ol class="etapes">${liste(p.etapes)}</ol></div>`:""}
     ${p.galerie.length?`<div class="galerie">${p.galerie.map(s=>`<img src="${s}" alt="" loading="lazy" onerror="this.remove()">`).join("")}</div>`:""}
     ${p.lien?`<a class="lien" href="${p.lien}" target="_blank" rel="noopener">Voir en ligne</a>`:""}
   </div>`;
-  $("fiche").showModal();
-  $("fiche").scrollTop=0;
+  $("fiche").showModal();$("fiche").scrollTop=0;
 }
-$("grille").onclick=e=>{const c=e.target.closest(".carte");if(c)ouvrir(PROJETS[c.dataset.n])};
-$("fiche").onclick=e=>{if(e.target===$("fiche")||e.target.closest(".fermer"))$("fiche").close()}; /* croix ou clic à l’extérieur */
+$("fiche").onclick=e=>{if(e.target===$("fiche")||e.target.closest(".fermer"))$("fiche").close()};
 
-/* Filtres : masque les cartes d’une autre catégorie puis rejoue leur apparition */
-$("filtres").onclick=e=>{
-  const b=e.target.closest(".filtre");if(!b)return;
-  $("filtres").querySelector(".actif").classList.remove("actif");b.classList.add("actif");
-  let n=0;
-  document.querySelectorAll(".carte").forEach(c=>{
-    const ok=b.textContent==="Tous"||c.dataset.cat===b.textContent;
-    c.classList.remove("vu");c.classList.toggle("cache",!ok);
-    if(ok)c.style.setProperty("--i",n++);
-  });
-  void $("grille").offsetWidth;                                   /* force le navigateur à relire la page */
-  document.querySelectorAll(".carte:not(.cache)").forEach(c=>c.classList.add("vu"));
-};
+/* --- Contact : affiche le texte du bouton survolé (ou touché / ciblé au clavier) --- */
+const info=$("info"),btns=[...document.querySelectorAll(".btn")],tactile=matchMedia("(hover:none)").matches;
+function montrer(t){
+  info.textContent=t;info.classList.add("on");
+  info.animate([{transform:"translateY(.6rem)",opacity:0},{transform:"none",opacity:1}],{duration:350,easing:"ease-out"});
+}
+btns.forEach(b=>{
+  b.addEventListener("pointerenter",()=>montrer(b.dataset.info));
+  b.addEventListener("focus",()=>montrer(b.dataset.info));
+  if(!tactile){b.addEventListener("pointerleave",()=>info.classList.remove("on"));b.addEventListener("blur",()=>info.classList.remove("on"))}
+});
+if(tactile)montrer(btns[0].dataset.info);                      /* sur mobile, l’e-mail est affiché d’emblée */
 
-/* Apparition au scroll */
-const obs=new IntersectionObserver(es=>es.forEach(e=>{
-  if(e.isIntersecting){e.target.classList.add("vu");obs.unobserve(e.target)}
-}),{threshold:.15});
+/* --- Section visible : couleur du site, header et pastille --- */
+const nav=$("menu"),pastille=nav.querySelector(".pastille"),liens=[...nav.querySelectorAll("a")],meta=document.querySelector("meta[name=theme-color]");
+function placer(a){if(a){pastille.style.width=a.offsetWidth+"px";pastille.style.transform=`translateX(${a.offsetLeft}px)`}}
+let courant=liens[0];
+const suivi=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;                                 /* la section qui traverse le milieu de l’écran */
+  const th=e.target.dataset.theme;
+  document.body.dataset.theme=th;                              /* change la couleur de tout le site */
+  meta.content=th==="rose"?"#b5134b":"#faf5f1";                /* couleur de la barre du navigateur mobile */
+  nav.classList.toggle("visible",e.target.id!=="accueil");     /* header caché sur l’accueil */
+  const a=liens.find(l=>l.hash==="#"+e.target.id);
+  if(a){liens.forEach(l=>l.classList.toggle("actif",l===a));courant=a;placer(a)}
+}),{rootMargin:"-50% 0px -50% 0px"});
+document.querySelectorAll("section").forEach(s=>suivi.observe(s));
+addEventListener("resize",()=>placer(courant));
+document.fonts.ready.then(()=>placer(courant));
+
+/* --- Apparition au scroll --- */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("vu");obs.unobserve(e.target)}}),{threshold:.15});
 document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
-
-/* Menu burger (mobile) */
-const fermerMenu=o=>{$("menu").classList.toggle("ouvert",o);$("burger").setAttribute("aria-expanded",o)};
-$("burger").onclick=()=>fermerMenu(!$("menu").classList.contains("ouvert"));
-$("menu").onclick=e=>{if(e.target.tagName==="A")fermerMenu(false)};
-
-/* Barre de progression de lecture */
-addEventListener("scroll",()=>{
-  $("progres").style.transform=`scaleX(${scrollY/(document.documentElement.scrollHeight-innerHeight)})`;
-},{passive:true});
 </script>
 </body>
 </html>
